@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout jev-calib
+        uses: actions/checkout@v4
+        with:
+          path: jev-calib
+
+      # jev-calib v0.2 复用 jevkit 的 HTTP 层 → CI 里把兄弟仓放到同级目录
+      - name: Checkout jevkit (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: HCTDIP/jevkit
+          path: jevkit
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pytest
+        run: pip install pytest
+
+      # 真测试：conftest.py 会把 ../jevkit 加进 sys.path，无需手动设 PYTHONPATH
+      - name: Unit tests (no network)
+        working-directory: jev-calib
+        run: pytest -q
+
+      # 脚本式 runner 也跑一遍（向后兼容那条入口）
+      - name: Legacy script runner
+        working-directory: jev-calib
+        run: python3 test_jev_calib.py
+
+      # 离线校准冒烟（mock，不需要 key）
+      - name: Calibration smoke (mock)
+        working-directory: jev-calib
+        run: python3 jev_calib.py --config cases.json --runs 3 --dry-run
+
+      # 有 secret 才跑真调用，没有就跳过（避免 CI 因缺 key 变红）
+      - name: Live calibration (needs OPENROUTER_API_KEY secret)
+        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
+        working-directory: jev-calib
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 jev_calib.py --config cases.json --runs 3
