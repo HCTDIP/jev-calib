@@ -44,10 +44,15 @@ jobs:
         working-directory: jev-calib
         run: python3 jev_calib.py --config cases.json --runs 3 --dry-run
 
-      # 有 secret 才跑真调用，没有就跳过（避免 CI 因缺 key 变红）
-      - name: Live calibration (needs OPENROUTER_API_KEY secret)
-        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
+      # 有 secret 才跑真调用，没有就跳过
+      # （注意：不要把 secrets 放进 if: 表达式，GitHub 会判 workflow 非法 → 整次 run 无 job 直接失败）
+      - name: Live calibration (skips when no key)
         working-directory: jev-calib
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python3 jev_calib.py --config cases.json --runs 3
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "no OPENROUTER_API_KEY secret -> skip live run"
+            exit 0
+          fi
+          python3 jev_calib.py --config cases.json --runs 3

@@ -6,10 +6,31 @@
 """
 import json, time, statistics, os, argparse, datetime
 
-try:
-    from jevkit import Client
-except ImportError:
-    raise SystemExit("jevkit required: git clone https://github.com/HCTDIP/jevkit.git && PYTHONPATH=jevkit")
+import sys
+
+def _ensure_jevkit():
+    """先按正常 import；失败则自动把兄弟目录 ../jevkit 加进 sys.path 再试一次。
+
+    免去"两个仓并排 clone 还必须手动设 PYTHONPATH"的摩擦（CI 与本地都受益）。
+    """
+    try:
+        from jevkit import Client  # noqa
+        return Client
+    except ImportError:
+        pass
+    sibling = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "jevkit"))
+    if os.path.isdir(sibling) and sibling not in sys.path:
+        sys.path.insert(0, sibling)
+    try:
+        from jevkit import Client  # noqa
+        return Client
+    except ImportError:
+        raise SystemExit(
+            "jevkit required: git clone https://github.com/HCTDIP/jevkit.git "
+            "(放到本仓同级目录即可，或设 PYTHONPATH=../jevkit)"
+        )
+
+Client = _ensure_jevkit()
 
 _client = None
 
