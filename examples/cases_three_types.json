@@ -1,0 +1,53 @@
+[
+  {
+    "name": "honeypot-check",
+    "state": "Bounty: 'Create contributors webpage', 23 USDC, opened 3 months ago, still open. Four applicants submitted PRs with wallet addresses; none paid. Other bounties use fictional currencies. Maintainer bot replies in roleplay prose.",
+    "questions": {
+      "is_real": {
+        "type": "noul",
+        "instructions": "Is this a genuine paid opportunity?",
+        "criteria": {
+          "true": "a real payer with a verifiable payment record",
+          "false": "no payment record, roleplay only, or asks for secrets"
+        }
+      },
+      "ev": {
+        "type": "score",
+        "instructions": "Score the expected value of pursuing this.",
+        "criteria": ["1 - not worth it", "2 - weak", "3 - fair", "4 - strong", "5 - excellent"]
+      },
+      "next_step": {
+        "type": "choice",
+        "instructions": "What should we do next?",
+        "criteria": {
+          "submit_now": "we can deliver a strong submission immediately",
+          "ask_sponsor": "need clarification before spending effort",
+          "skip": "not worth the effort or risk"
+        }
+      }
+    }
+  },
+  {
+    "name": "real-small-bounty",
+    "state": "Bounty #130: $3 USD paid via claim code. Task: find 5 out-of-scope subreddit threads from the last 21 days and draft compliant replies. The platform has 1,063 registered operators and has paid operators before; we already completed an identical delivery in ~2 minutes.",
+    "questions": {
+      "is_real": {
+        "type": "noul",
+        "instructions": "Is this a genuine paid opportunity?",
+        "criteria": {
+          "true": "a real payer with a verifiable payment record",
+          "false": "no payment record, roleplay only, or asks for secrets"
+        }
+      },
+      "next_step": {
+        "type": "choice",
+        "instructions": "What should we do next?",
+        "criteria": {
+          "submit_now": "we already have the deliverable ready",
+          "ask_sponsor": "need clarification first",
+          "skip": "not worth it"
+        }
+      }
+    }
+  }
+]
