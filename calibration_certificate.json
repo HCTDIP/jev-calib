@@ -1,0 +1,44 @@
+{
+  "schema": "jev-calib/certificate@1",
+  "issued_at": "2026-09-25T10:51:57+00:00",
+  "repo": "https://github.com/HCTDIP/jev-calib",
+  "commit": "c63a0dd62459ca0c50dd91649db2feac13e03cb4",
+  "model": "typesafe/jev-1.13",
+  "mode": "live",
+  "runs_per_case": 3,
+  "threshold": 0.05,
+  "cases": [
+    "lead-worth-mock"
+  ],
+  "results": [
+    {
+      "case": "lead-worth-mock",
+      "questions": {
+        "worth_outreach": {
+          "mean": 0.37333333333333335,
+          "std": 0.004714045207910321,
+          "min": 0.37,
+          "max": 0.38,
+          "max_delta": 0.01,
+          "flips": 0
+        }
+      },
+      "cost": {
+        "avg": 1.3608e-05,
+        "total": 4.0824e-05,
+        "avg_latency": 1.6233944098154705,
+        "runs": 3
+      }
+    }
+  ],
+  "verdict_inputs": {
+    "worst_max_delta": 0.01,
+    "total_flips": 0
+  },
+  "verdict": "STABLE",
+  "env": {
+    "python": "3.12.14",
+    "platform": "Linux"
+  },
+  "digest_sha256": "d5d29d595e22167cc164df374337aab682eecbd1a742fa2c5a7485200f6b77cf"
+}

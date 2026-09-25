@@ -1,5 +1,7 @@
 # jev-calib
 
+[![CI](https://github.com/HCTDIP/jev-calib/actions/workflows/ci.yml/badge.svg)](https://github.com/HCTDIP/jev-calib/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Certificate](https://img.shields.io/badge/calibration-STABLE%20(self--verified)-brightgreen)](calibration_certificate.json)
+
 > **Project: [Jeveto](https://github.com/HCTDIP/jeveto)** — 置信度门控的 Agent 决策层
 > 生态三仓：**[jeveto](https://github.com/HCTDIP/jeveto)**（编排层）· **[jevkit](https://github.com/HCTDIP/jevkit)**（决策客户端）· **jev-calib**（决策监控 · 本仓）
 
@@ -82,3 +84,22 @@ python3 track.py --report-only     # 只看趋势（不花钱）
 ## License
 
 MIT · 姊妹仓 [jevkit](https://github.com/HCTDIP/jevkit) · [jeveto](https://github.com/HCTDIP/jeveto)
+
+## 校准证书（Calibration Certificate）
+
+**别信 README 里的数字，信你自己跑出来的数字。**
+
+```sh
+python3 calibrate.py --runs 3 --output calibration_certificate.json   # 签发（有 key 走真调用）
+python3 calibrate.py --verify calibration_certificate.json            # 复核（不联网）
+```
+
+证书是机器可复验的 JSON：每个 case / 每个问题的 mean·std·max_delta·flips + 判定
+（`STABLE` / `DRIFT_DETECTED`）+ 模型版本 + commit + 环境，最后带 **sha256 自摘要** ——
+**结论被改一个字，`--verify` 立刻报 ❌**（防"PPT 证书"）。
+
+CI 每次 push 会在无 key 环境下用 mock 路径重复跑一遍签发+复核，并把 `calibration_certificate.json`
+作为工件上传（`actions → ci → artifacts`）。
+
+实测（live，2026-09-25）：`verdict=STABLE`，`worst_delta=0.01`，`flips=0`，
+单次决策 `$0.0000119`（±2%）—— 与姊妹仓 [jeveto](https://github.com/HCTDIP/jeveto) README 的战绩行同源。

@@ -28,6 +28,9 @@ jobs:
 
       - name: Install pytest
         run: pip install pytest
+      # 无 key → 自动 mock（不外呼）；证书是「自证稳定」的机器可复验证据
+      - name: Issue calibration certificate (offline)
+        run: python calibrate.py --runs 3 --output calibration_certificate.json
 
       # 真测试：conftest.py 会把 ../jevkit 加进 sys.path，无需手动设 PYTHONPATH
       - name: Unit tests (no network)
@@ -56,3 +59,8 @@ jobs:
             exit 0
           fi
           python3 jev_calib.py --config cases.json --runs 3
+      - name: Upload certificate
+        uses: actions/upload-artifact@v4
+        with:
+          name: calibration-certificate
+          path: calibration_certificate.json

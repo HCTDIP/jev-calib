@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jev-calib"
+version = "0.2.0"
+description = "Calibration observability for TypeSafe Jev: repeatability, drift detection, and machine-verifiable calibration certificates"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "HCTDIP" }]
+keywords = ["jev", "calibration", "drift", "observability", "llm", "agents", "reproducibility", "certificate"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+sdk = ["jevkit"]  # 真调用时用；也可并排 clone 兄弟仓（见 README）
+
+[project.urls]
+Homepage = "https://github.com/HCTDIP/jev-calib"
+Repository = "https://github.com/HCTDIP/jev-calib"
+"Ecosystem: orchestration" = "https://github.com/HCTDIP/jeveto"
+"Ecosystem: client" = "https://github.com/HCTDIP/jevkit"
+
+[tool.setuptools]
+py-modules = ["jev_calib", "calibrate", "track"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
